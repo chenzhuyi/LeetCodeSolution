@@ -65,4 +65,68 @@ public class Sorts {
         quickSort(nums, i, id-1);
         quickSort(nums, id+1, j);
     }
+
+    /**
+     * 时间复杂度O(n^2), 空间复杂度O(1), 不稳定
+     * @param nums
+     */
+    public void chooseSort(int[] nums) {
+        int tmp = 0;
+        for (int i = 0; i< nums.length; ++i) {
+            for (int j = i + 1; j < nums.length; ++j) {
+                if (nums[j] >= nums[i])
+                    continue;
+                tmp = nums[i];
+                nums[i] = nums[j];
+                nums[j] = tmp;
+            }
+        }
+        System.out.println(Arrays.stream(nums).boxed().collect(Collectors.toList()));
+    }
+
+    /**
+     * 总的平均时间复杂度为O(nlogn)。而且，归并排序的最好，最坏，平均时间复杂度均为O(nlogn)
+     * 空间复杂度O(n), 稳定
+     * @param nums
+     */
+    public void mergeSort(int[] nums) {
+        mergeSort(nums, 0, nums.length-1, new int[nums.length]);
+        System.out.println(Arrays.stream(nums).boxed().collect(Collectors.toList()));
+
+    }
+
+    private void mergeSort(int[] nums, int left, int right, int[] tmp) {
+        if (left < right) {
+            int middle = (left+right)/2;
+            // left ~ middle; middle+1~ right
+            mergeSort(nums, left, middle, tmp);
+            mergeSort(nums, middle+1, right, tmp);
+            // merge
+            merge(nums, left, middle, right, tmp);
+        }
+    }
+
+    private void merge(int[] nums, int left, int middle, int right, int[] tmp) {
+        int i = left;
+        int j = middle + 1;
+        int k = 0;
+        while (i <= middle && j <= right) {
+            if (nums[i] <= nums[j]) {
+                tmp[k++] = nums[i++];
+            } else {
+                tmp[k++] = nums[j++];
+            }
+        }
+        while (i <= middle) {
+            tmp[k++] = nums[i];
+            ++i;
+        }
+        while (j <= right) {
+            tmp[k++] = nums[j];
+            ++j;
+        }
+        for (int l = 0; l < k; ++l) {
+            nums[left+l]=tmp[l];
+        }
+    }
 }
